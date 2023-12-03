@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.concurrent.TimeUnit;
@@ -67,13 +66,13 @@ public class WANNABEMOVEMENT extends OpMode {
 
         if(!isTimeDiffSet){
             timeDiff = (double) runtime.time(TimeUnit.SECONDS) - startingAccelerationTime;
-            if(timeDiff >= 3){
+            if(timeDiff >= 2){
                 isTimeDiffSet = true;
             }
         }
 
 
-        accelerationMultiplier = (double) timeDiff / 3;
+        accelerationMultiplier = (double) timeDiff / 2;
 
         if(yStickValue == 0 && xStickValue == 0){
             rightMotor.setPower(0.00);
@@ -85,7 +84,7 @@ public class WANNABEMOVEMENT extends OpMode {
             return;
         }
 
-        rightMotor.setPower((yStickValue + xStickValue * accelerationMultiplier) * 0.5);
-        leftMotor.setPower((yStickValue - xStickValue * accelerationMultiplier) * 0.5);
+        rightMotor.setPower(((yStickValue + xStickValue) * accelerationMultiplier) * 0.5);
+        leftMotor.setPower(((yStickValue - xStickValue) * accelerationMultiplier) * 0.5);
     }
 }
