@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-//import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
-//import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.processor.ToFindDaProp;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -58,11 +58,11 @@ public class AutonomousVisualDetection extends OpMode {
 
         initAprilTag();
 
-        /*try {
+        try {
             setManualExposure(6, 250);
         }catch (InterruptedException e){
             e.printStackTrace();
-        }*/
+        }
 
     }
 
