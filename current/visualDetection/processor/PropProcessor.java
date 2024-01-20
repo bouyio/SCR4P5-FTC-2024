@@ -1,3 +1,11 @@
+
+/*
+*   This code was written for the prop detection
+*   part of the old autonomou written in the
+*   17th of December 2023. It still used in
+*   current automonous.
+*/
+
 package org.firstinspires.ftc.teamcode.processor;
 
 import android.graphics.Canvas;
