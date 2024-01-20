@@ -18,7 +18,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import java.util.List;
 
 
-@Autonomous(name = "to test an autonomous")
+@Autonomous(name = "Visual Autonomous")
 public class AutonomousVisualDetection extends OpMode {
 
     private VisionPortal visionPortal;
