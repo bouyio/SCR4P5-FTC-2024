@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode;
 
 
@@ -11,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 
 @TeleOp()
-public class SCR4P5OPMode extends OpMode {
+public class SCR4P5MovementOPMode extends OpMode {
     /* Declare OpMode members. */
     DcMotor right_motor;
     DcMotor left_motor;
