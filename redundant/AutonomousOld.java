@@ -1,3 +1,12 @@
+
+/*
+*   This code was meant to be the complete
+*   autonomous for the old driving base
+*   but it did not work. Started in the
+*   10th of December 2023 and eventually
+*   finished in the 17th of December 2023
+*/
+
 package org.firstinspires.ftc.teamcode;
 
 
