@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
-@Autonomous(name = "to test an autonomous")
+@Autonomous(name = "Autonomous Test")
 public class AutonomousFinaler extends OpMode {
 
     private final double desiredDistance = 3.0;
