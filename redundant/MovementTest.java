@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.concurrent.TimeUnit;
 
 @TeleOp()
-public class WANNABEMOVEMENT extends OpMode {
+public class MovementTest extends OpMode {
 
     private DcMotor leftMotor;
     private DcMotor rightMotor;
