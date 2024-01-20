@@ -1,7 +1,7 @@
 
 /*
 *   This code was written for the prop detection
-*   part of the old autonomou written in the
+*   part of the old autonomous written in the
 *   17th of December 2023. It still used in
 *   current automonous.
 */
