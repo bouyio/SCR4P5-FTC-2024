@@ -1,3 +1,11 @@
+
+/*
+*   This code was written in December 3rd
+*   of 2023 for at the time driving base
+*   after the previous code started to 
+*   throw up an unfixable error.
+*/
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
