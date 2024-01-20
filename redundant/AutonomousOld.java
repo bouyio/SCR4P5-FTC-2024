@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 
 @Autonomous(name = "Autonomous Test")
-public class AutonomousFinaler extends OpMode {
+public class AutonomousOld extends OpMode {
 
     private final double desiredDistance = 3.0;
 
