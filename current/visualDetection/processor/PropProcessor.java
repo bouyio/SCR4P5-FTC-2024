@@ -11,7 +11,7 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-public class ToFindDaProp implements VisionProcessor {
+public class PropProcessor implements VisionProcessor {
     public Rect rectLeft = new Rect(0, 42, 170, 400);
     public Rect rectMiddle = new Rect(235, 42, 170, 400);
     public Rect rectRight = new Rect(470, 42, 170, 400);
