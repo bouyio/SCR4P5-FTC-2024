@@ -1,3 +1,12 @@
+
+/*
+*   This code was written before the kit arrived.
+*   So, it was written and tested entirely using
+*   simulations. Written to test the movement of
+*   our at the time driving base in October 27 of 
+*   2023.
+*/
+
 package org.firstinspires.ftc.teamcode;
 
 
