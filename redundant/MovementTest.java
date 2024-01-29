@@ -17,10 +17,13 @@ import java.util.concurrent.TimeUnit;
 
 @TeleOp()
 public class MovementTest extends OpMode {
+    // This section decrales OpMode members.
 
+    // The declaration of the motors
     private DcMotor leftMotor;
     private DcMotor rightMotor;
-
+    
+    // These are the fields required for the acceleration.
     private double accelerationMultiplier;
     private double timeDiff;
     private boolean isTimeDiffSet = false;
@@ -31,10 +34,10 @@ public class MovementTest extends OpMode {
 
     @Override
     public void init() {
+        // Initialization of devices.
         leftMotor = hardwareMap.get(DcMotor.class, "left_motor");
         rightMotor = hardwareMap.get(DcMotor.class, "right_motor");
 
-        // Reverse the left motor if needed
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
         telemetry.addData("Status", "Initialized");
@@ -42,23 +45,26 @@ public class MovementTest extends OpMode {
 
     @Override
     public void loop() {
+        // Update of the controller inputs.
+        
         boolean turboBtn = gamepad1.right_bumper;
 
-        // Gamepad left stick controls forward and backward movement
         double forward = -gamepad1.left_stick_y;
-        // Gamepad right stick controls right and left movement
         double right = gamepad1.right_stick_x;
 
-        // Calculate motor powers
+        // This calculates the necessery power for the motors.
         double leftPower = forward + right;
         double rightPower = forward - right;
 
+        // This check whether to accelarate or run the motor at full speed.
         if(turboBtn) {
             leftMotor.setPower(leftPower);
             rightMotor.setPower(rightPower);
         }else {
             accelerate(forward, right);
         }
+
+        // This updates the data needed to debug.
         telemetry.addData("Forward", forward);
         telemetry.addData("Right", right);
         telemetry.addData("Left Power", leftPower);
@@ -66,11 +72,31 @@ public class MovementTest extends OpMode {
         telemetry.update();
     }
 
+    // This function handles the acceleration of the robot.
     private void accelerate(double yStickValue, double xStickValue){
+        /*
+        * This is a guard set in place to initialize the necessary variables
+        * for the acceleration when the driver stops the robot.
+        */
+        if(yStickValue == 0 && xStickValue == 0){
+            rightMotor.setPower(0.00);
+            leftMotor.setPower(0.00);
+            accelerationMultiplier = 0;
+            isStartingAccelerationTimeSet = false;
+            isTimeDiffSet = false;
+
+            return;
+        }
+
+        /*
+        * This is a check to make sure that the time the robot
+        * has started accelerating has been set.
+        */
         if(!isStartingAccelerationTimeSet){
             startingAccelerationTime = (double) runtime.time(TimeUnit.SECONDS);
             isStartingAccelerationTimeSet = true;
         }
+
 
         if(!isTimeDiffSet){
             timeDiff = (double) runtime.time(TimeUnit.SECONDS) - startingAccelerationTime;
@@ -82,15 +108,7 @@ public class MovementTest extends OpMode {
 
         accelerationMultiplier = (double) timeDiff / 2;
 
-        if(yStickValue == 0 && xStickValue == 0){
-            rightMotor.setPower(0.00);
-            leftMotor.setPower(0.00);
-            accelerationMultiplier = 0;
-            isStartingAccelerationTimeSet = false;
-            isTimeDiffSet = false;
 
-            return;
-        }
 
         rightMotor.setPower(((yStickValue + xStickValue) * accelerationMultiplier) * 0.5);
         leftMotor.setPower(((yStickValue - xStickValue) * accelerationMultiplier) * 0.5);
