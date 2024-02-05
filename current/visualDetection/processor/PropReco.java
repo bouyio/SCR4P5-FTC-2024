@@ -17,9 +17,8 @@ public class PropReco implements VisionProcessor {
     public static PropReco.AllianceColor alliance = AllianceColor.NONE;
     PropReco.Selected selection = PropReco.Selected.NONE;
 
-    // these 2 line are for the processing of the frame 
-    
- 
+    // this line is for the processing of the frame 
+    
     Mat submat = new Mat();
 
     // these 3 lines are for the division webcam(video feed) input in 3 seperate parts
