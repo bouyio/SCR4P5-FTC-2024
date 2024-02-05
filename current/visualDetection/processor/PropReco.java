@@ -19,7 +19,7 @@ public class PropReco implements VisionProcessor {
 
     // these 2 line are for the processing of the frame 
     
-    Mat frame = new Mat();
+ 
     Mat submat = new Mat();
 
     // these 3 lines are for the division webcam(video feed) input in 3 seperate parts
