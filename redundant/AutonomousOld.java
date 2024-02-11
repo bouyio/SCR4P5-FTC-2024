@@ -9,7 +9,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
-
+//imports:
 import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -34,17 +34,21 @@ public class AutonomousOld extends OpMode {
 
     private final double desiredDistance = 3.0;
 
+    //Sets camera enviroment
     private VisionPortal visionPortal;
     private ToFindDaProp propProcessor;
     private int desiredTagID = -1;
 
+    //Setting tag detection settings
     private AprilTagProcessor aprilTag;
     private AprilTagDetection desiredTag = null;
     private boolean targetFound;
 
+    //Sets variables for the motors
     private DcMotor leftMotor;
     private DcMotor rightMotor;
 
+    //Sets autonomus drive settings
     private final double maxAutoSpeed = 0.5;
     private final double maxAutoTurn = 0.25;
     private final double speedGain = 0.02;
@@ -54,6 +58,7 @@ public class AutonomousOld extends OpMode {
 
     @Override
     public void init_loop() {
+        //PropDetection
         if(propProcessor.getSelection() == ToFindDaProp.Selected.LEFT && propProcessor.getSelection()== ToFindDaProp.Selected.RIGHT){
             desiredTagID = 3;
         }else {
@@ -63,13 +68,17 @@ public class AutonomousOld extends OpMode {
 
     @Override
     public void init() {
+        //Prints the string "initializing..." to telemetry
         telemetry.addLine("initializing...");
+        //Using functions from library to detect the prop
         propProcessor = new ToFindDaProp();
         initPropDetection(propProcessor);
-
+        
+        //Sets motor Values
         leftMotor = hardwareMap.get(DcMotor.class, "left_motor");
         rightMotor = hardwareMap.get(DcMotor.class, "right_motor");
 
+        //Setting motors direction so they move in the same direction
         rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -80,11 +89,13 @@ public class AutonomousOld extends OpMode {
     @Override
     public void start() {
         telemetry.addLine("Starting...");
+        //Closing the vision portal
         visionPortal.close();
         visionPortal = null;
 
         initAprilTag();
 
+        //Setting the manualExposure
         try {
             setManualExposure(6, 250);
         }catch (InterruptedException e){
@@ -99,47 +110,60 @@ public class AutonomousOld extends OpMode {
         targetFound = false;
         desiredTag = null;
 
+        //Setting up a list with all the aprilTags that have been detecting
         List<AprilTagDetection> currentDetection = aprilTag.getDetections();
+        //Running through all the tags that are in the list
         for (AprilTagDetection detection: currentDetection){
+            //Checks if the aprlilTag has metadata
             if(detection.metadata != null){
+                //Checks if it has found the wanted tag
                 if((desiredTagID < 0) || (detection.id == desiredTagID)){
+                    //Setting up the variables to the desired tag
                     targetFound = true;
                     desiredTag = detection;
                     telemetry.addLine("Desired tag found.");
                 }else {
+                    //Sends meessage to telemetry that the tag found is not the wanted one 
                     telemetry.addData("Skipping", "Tag ID %d is not found", detection.id);
                 }
             }else {
+                //Send meessage to telemetry that the tag's list is not found
                 telemetry.addData("Unknown", "Tag ID %d not in TagLibrary", detection.id);
             }
         }
 
+        //If tag target not found do not continue 
         if(!targetFound){
             return;
         }
 
+        // sets distance veriables 
         double rangeError = desiredTag.ftcPose.range - desiredDistance;
         double headingError = desiredTag.ftcPose.bearing;
 
+        // sets variables for movement, and prints them to the telemetry 
         drive = Range.clip(rangeError * speedGain, -maxAutoSpeed, maxAutoSpeed);
         turn = Range.clip(headingError * turnGain, -maxAutoTurn, maxAutoTurn);
         telemetry.addData("Auto", "Drive %5.2f, Turn %5.2f", drive, turn);
 
         moveRobot(drive, turn);
 
+        // waits for 10 seconds 
         try {
             sleep(10);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
-
+    // fanction tht is used for the initialisting proccess of the detection 
     private void initPropDetection(ToFindDaProp processor){
+        // lninks the camera to the script(visionportal)
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         visionPortal = VisionPortal.easyCreateWithDefaults(webcamName, processor);
 
     }
 
+    
     private void setManualExposure(int exposureMS, int gain) throws InterruptedException {
         // Wait for the camera to be open, then use the controls
 
@@ -196,16 +220,19 @@ public class AutonomousOld extends OpMode {
 
     }
 
+    // this is the fanction that moves the robot
     public void moveRobot(double x, double yaw){
         double leftPower = x- yaw;
         double rightPower = x + yaw;
 
+        // fixes motor power if it's over the limits [-1,1]
         double max = Math.max(Math.abs(leftPower), Math.abs(rightPower));
         if(max > 1.0){
             leftPower /= max;
             rightPower /= max;
         }
 
+        //seting up power
         leftMotor.setPower(leftPower);
         rightMotor.setPower(rightPower);
     }
