@@ -36,6 +36,13 @@ public class LockIn extends OpMode {
     public void loop() {
         if (gamepad1.a){
             new Thread(this::lock);
+        } else {
+            isOriginSet = false;
+            motorOriginPosition[0] = 0;
+            motorOriginPosition[1] = 0;
+            motorOriginPosition[2] = 0;
+            motorOriginPosition[3] = 0;
+
         }
     }
 
