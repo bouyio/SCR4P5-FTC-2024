@@ -26,6 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 @Autonomous()
 public class FinestMovementAutonomousOmni extends OpMode {
+
+    // Declaring OpMode members.
     TouchSensor touchSensor;
 
     final double DISIEREDDISTANCE = 1.0; //  this is how close the camera should get to the target (inches)
@@ -33,25 +35,29 @@ public class FinestMovementAutonomousOmni extends OpMode {
     //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
     //  applied to the drive motors to correct the error.
     //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-    final double SPEEDGAIN =  0.02  ;   //  Forward Speed Control "Gain". eg: Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    final double STRAFEGAIN =  0.015 ;   //  Strafe Speed Control "Gain".  eg: Ramp up to 25% power at a 25 degree Yaw error.   (0.25 / 25.0)
-    final double TURNGAIN =  0.01  ;   //  Turn Control "Gain".  eg: Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+    final double SPEEDGAIN =  0.02  ;   //  Forward Speed Control "Gain". 
+    final double STRAFEGAIN =  0.015 ;   //  Strafe Speed Control "Gain".  
+    final double TURNGAIN =  0.01  ;   //  Turn Control "Gain".  
 
-    final double MAXAUTOSPEED = 0.7;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAXAUTOSTRAFE = 0.7;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAXAUTOTURN = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
+    final double MAXAUTOSPEED = 0.7;   //  Clip the approach speed to this max value 
+    final double MAXAUTOSTRAFE = 0.7;   //  Clip the approach speed to this max value 
+    final double MAXAUTOTURN = 0.3;   //  Clip the turn speed to this max value 
 
+    // The componets required for the prop detection.
     PropReco propReco;
     VisionPortal visionPortal;
-    int desiredTagId = -1;
-    private AprilTagDetection desiredTag = null;
 
     DcMotor leftBackDrive;
     DcMotor rightBackDrive;
     DcMotor leftFrontDrive;
     DcMotor rightFrontDrive;
 
+    // The componets required for the april tag tracking.
+    int desiredTagId = -1;
+    private AprilTagDetection desiredTag = null;
     private boolean targetFound  = false;
+    private AprilTagProcessor aprilTag;
+    
     private double  drive        = 0;
     private double  strafe       = 0;
     private double  turn         = 0;
@@ -59,11 +65,10 @@ public class FinestMovementAutonomousOmni extends OpMode {
 
     IMU gyroscope;
 
-    private AprilTagProcessor aprilTag;
-
-
     @Override
     public void init_loop() {
+
+        // These lines determine which april tags to track based on the position of the prop.
         if(propReco.getSelection() == PropReco.Selected.LEFT && propReco.getSelection() == PropReco.Selected.RIGHT){
             if(PropReco.alliance == PropReco.AllianceColor.BLUE){
                 desiredTagId = 2;
@@ -78,6 +83,7 @@ public class FinestMovementAutonomousOmni extends OpMode {
             }
         }
 
+        // Printing debug information to telemetry.
         telemetry.addData("alliance", PropReco.alliance);
         telemetry.addData("selected", propReco.getSelection());
         telemetry.addData("desired tag", desiredTagId);
@@ -92,10 +98,12 @@ public class FinestMovementAutonomousOmni extends OpMode {
 
     @Override
     public void init() {
+        // Initialization of the prop rocognition.
         propReco = new PropReco();
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         visionPortal = VisionPortal.easyCreateWithDefaults(webcamName, propReco);
 
+        // Intialization of the motors.
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
@@ -108,6 +116,7 @@ public class FinestMovementAutonomousOmni extends OpMode {
         leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        // Initialization of the gyroscope.
         IMU.Parameters gyroscopeParameters;
 
         gyroscopeParameters = new IMU.Parameters(
@@ -120,11 +129,9 @@ public class FinestMovementAutonomousOmni extends OpMode {
         gyroscope = hardwareMap.get(IMU.class, "gyroscope");
 
         gyroscope.initialize(gyroscopeParameters);
-
+        
+        // Initialization of the touch sensor.
         touchSensor = hardwareMap.get(TouchSensor.class, "touch_sensor");
-
-
-
     }
 
     @Override
@@ -136,11 +143,15 @@ public class FinestMovementAutonomousOmni extends OpMode {
         targetFound = false;
         desiredTag  = null;
 
+        // If the robot has hit the backdrop then we are stopping.
         arrivedToTarget = touchSensor.isPressed();
-
+        
+        // Add all the detections to a list.
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+
+        // Tu
         for (AprilTagDetection detection : currentDetections) {
-            // Look to see if we have size info on this tag.
+            // Check if there is size info on this tag.
             if (detection.metadata != null) {
                 //  Check to see if we want to track towards this tag.
                 if ((tagId < 0) || (detection.id == tagId)) {
@@ -158,6 +169,7 @@ public class FinestMovementAutonomousOmni extends OpMode {
             }
         }
 
+        // Printing debug info to the telemetry.
         if (targetFound) {
 
             telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
@@ -183,12 +195,13 @@ public class FinestMovementAutonomousOmni extends OpMode {
 
         // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
         double  rangeError      = (desiredTag.ftcPose.range - DISIEREDDISTANCE);
-        double  headingError    = desiredTag.ftcPose.bearing;double  yawError = desiredTag.ftcPose.yaw;// Use the speed and turn "gains" to calculate how we want the robot to move.
+        double  headingError    = desiredTag.ftcPose.bearing;double  yawError = desiredTag.ftcPose.yaw;
         drive  = Range.clip(rangeError * SPEEDGAIN, -MAXAUTOSPEED, MAXAUTOSPEED);
         turn   = Range.clip(headingError * TURNGAIN, -MAXAUTOTURN, MAXAUTOTURN) ;
         strafe = Range.clip(-yawError * STRAFEGAIN, -MAXAUTOSTRAFE, MAXAUTOSTRAFE);
         telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
 
+        // Check whether the robot has arrive to the target.
         if(headingError == 0){
             arrivedToTarget = true;
         }
@@ -201,6 +214,7 @@ public class FinestMovementAutonomousOmni extends OpMode {
         opModeSleep(10);
     }
 
+    // This function is resonsible for the movement of the robot.
     private void moveRobot(double x, double y, double yaw){
         // Calculate wheel powers.
         double leftFrontPower    =  x -y -yaw;
@@ -208,7 +222,7 @@ public class FinestMovementAutonomousOmni extends OpMode {
         double leftBackPower     =  x +y -yaw;
         double rightBackPower    =  x -y +yaw;
 
-        // Normalize wheel powers to be less than 1.0
+        // Normalize wheel powers to be less than max (1.0)
         double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
         max = Math.max(max, Math.abs(leftBackPower));
         max = Math.max(max, Math.abs(rightBackPower));
@@ -229,9 +243,11 @@ public class FinestMovementAutonomousOmni extends OpMode {
 
     @Override
     public void start() {
+        // These lines clear the telemetry and the vision portal.
         telemetry.clearAll();
         visionPortal = null;
 
+        // These lines initialize the apriltag detection.
         initAprilTagDetection();
 
         try {
@@ -240,6 +256,7 @@ public class FinestMovementAutonomousOmni extends OpMode {
             throw new RuntimeException(e);
         }
 
+        // These lines drive the robot to the prop.
         if(propReco.getSelection() == PropReco.Selected.LEFT){
             rightBackDrive.setPower(0.7);
             leftFrontDrive.setPower(0.7);
@@ -266,7 +283,7 @@ public class FinestMovementAutonomousOmni extends OpMode {
             leftBackDrive.setPower(0);
             rightBackDrive.setPower(0);
         }
-
+        
         leftBackDrive.setPower(-0.7);
         rightBackDrive.setPower(-0.7);
 
@@ -404,6 +421,7 @@ public class FinestMovementAutonomousOmni extends OpMode {
         }
     }
 
+    // This function is tho generally clean up the code by removing a lot of try/catch statements.
     private void opModeSleep(long millis) {
         try {
             sleep(millis);
