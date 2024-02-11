@@ -8,6 +8,7 @@
 
 package org.firstinspires.ftc.teamcode.processor;
 
+//imports
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,27 +20,33 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+// sets the rectangles of the screen that are used for checking where the prop is
 public class PropProcessor implements VisionProcessor {
     public Rect rectLeft = new Rect(0, 42, 170, 400);
     public Rect rectMiddle = new Rect(235, 42, 170, 400);
     public Rect rectRight = new Rect(470, 42, 170, 400);
     Selected selection = Selected.NONE;
 
+    
     Mat submat = new Mat();
     Mat hsvMat = new Mat();
 
+    //
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
     }
 
+    // processes the frame(s)
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
         Imgproc.cvtColor(frame, hsvMat, Imgproc.COLOR_RGB2HSV);
 
+        // checks the average saturtion of the rectangles
         double satRectLeft = getAvgSaturation(hsvMat, rectLeft);
         double satRectMiddle = getAvgSaturation(hsvMat, rectMiddle);
         double satRectRight = getAvgSaturation(hsvMat, rectRight);
 
+        // checkes which rectngle has the most average saturation and returns the value
         if ((satRectLeft > satRectMiddle) && (satRectLeft > satRectRight)) {
             return Selected.LEFT;
         } else if ((satRectMiddle > satRectLeft) && (satRectMiddle > satRectRight)) {
@@ -48,11 +55,13 @@ public class PropProcessor implements VisionProcessor {
         return Selected.RIGHT;
     }
 
+    // the fanctionc that gets the average saturation
     protected double getAvgSaturation(Mat input, Rect rect) {
         submat = input.submat(rect);
         Scalar color = Core.mean(submat);
         return color.val[1];
     }
+    // makes rectangles
     private android.graphics.Rect makeGraphicsRect(Rect rect, float scaleBmpPxToCanvasPx) {
         int left = Math.round(rect.x * scaleBmpPxToCanvasPx);
         int top = Math.round(rect.y * scaleBmpPxToCanvasPx);
@@ -62,13 +71,16 @@ public class PropProcessor implements VisionProcessor {
         return new android.graphics.Rect(left, top, right, bottom);
     }
 
+    // draws frames
      @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
+         // sets the colour of the frames that do have the prop to red
          Paint selectedPaint = new Paint();
          selectedPaint.setColor(Color.RED);
          selectedPaint.setStyle(Paint.Style.STROKE);
          selectedPaint.setStrokeWidth(scaleCanvasDensity * 4);
 
+        // sets the colour of the frames that don't have the prop to green
          Paint nonSelectedPaint = new Paint(selectedPaint);
          nonSelectedPaint.setColor(Color.GREEN);
 
@@ -78,6 +90,7 @@ public class PropProcessor implements VisionProcessor {
                scaleBmpPxToCanvasPx);
          android.graphics.Rect drawRectangleRight = makeGraphicsRect(rectRight, scaleBmpPxToCanvasPx);
 
+        // checks where the prop is and paints the appropriate recntangle
          selection = (Selected) userContext;
          switch (selection) {
            case LEFT:
