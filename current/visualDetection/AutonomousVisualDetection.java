@@ -22,7 +22,7 @@ import java.util.List;
 public class AutonomousVisualDetection extends OpMode {
 
     private VisionPortal visionPortal;
-    private PropProcessor propProcessor;
+    private PropReco propReco;
     private int desiredTagID = -1;
 
     private AprilTagProcessor aprilTag;
@@ -33,7 +33,7 @@ public class AutonomousVisualDetection extends OpMode {
 
     @Override
     public void init_loop() {
-        if(propProcessor.getSelection() == PropProcessor.Selected.LEFT && propProcessor.getSelection()== PropProcessor.Selected.RIGHT){
+        if(propReco.getSelection() == PropReco Selected.LEFT && propReco.getSelection()== PropReco Selected.RIGHT){
             desiredTagID = 3;
         }else {
             desiredTagID = 2;
@@ -43,8 +43,8 @@ public class AutonomousVisualDetection extends OpMode {
     @Override
     public void init() {
         telemetry.addLine("initializing...");
-        propProcessor = new PropProcessor();
-        initPropDetection(propProcessor);
+        propReco = new PropReco );
+        initPropDetection(propReco);
 
 
 
@@ -88,7 +88,7 @@ public class AutonomousVisualDetection extends OpMode {
         }
     }
 
-    private void initPropDetection(PropProcessor processor){
+    private void initPropDetection(PropReco processor){
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
         visionPortal = VisionPortal.easyCreateWithDefaults(webcamName, processor);
 
