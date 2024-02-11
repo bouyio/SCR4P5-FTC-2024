@@ -97,7 +97,7 @@ public class MovementTest extends OpMode {
             isStartingAccelerationTimeSet = true;
         }
 
-
+        //Checks time difference from the beggining of the acceleration if it is false 
         if(!isTimeDiffSet){
             timeDiff = (double) runtime.time(TimeUnit.SECONDS) - startingAccelerationTime;
             if(timeDiff >= 2){
@@ -105,11 +105,11 @@ public class MovementTest extends OpMode {
             }
         }
 
-
+        //Sets the accelerationMultiplier 
         accelerationMultiplier = (double) timeDiff / 2;
 
 
-
+         //Setting motor power that is multiplied by accelerationMultiplier
         rightMotor.setPower(((yStickValue + xStickValue) * accelerationMultiplier) * 0.5);
         leftMotor.setPower(((yStickValue - xStickValue) * accelerationMultiplier) * 0.5);
     }
