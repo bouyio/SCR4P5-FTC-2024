@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 
 import static java.lang.Thread.sleep;
-
+//Imports:
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -21,16 +21,19 @@ import java.util.List;
 @Autonomous(name = "Visual Autonomous")
 public class AutonomousVisualDetection extends OpMode {
 
+    //Sets camera enviroment
     private VisionPortal visionPortal;
     private PropReco propReco;
     private int desiredTagID = -1;
 
+    //Setting tag detection settings
     private AprilTagProcessor aprilTag;
     private AprilTagDetection desiredTag = null;
     private boolean targetFound;
 
     private ElapsedTime runtime = new ElapsedTime();
 
+    // prop detection 
     @Override
     public void init_loop() {
         if(propReco.getSelection() == PropReco Selected.LEFT && propReco.getSelection()== PropReco Selected.RIGHT){
@@ -42,7 +45,9 @@ public class AutonomousVisualDetection extends OpMode {
 
     @Override
     public void init() {
+        //Prints the string "initializing..." to telemetry
         telemetry.addLine("initializing...");
+        //Using functions from library to detect the prop
         propReco = new PropReco );
         initPropDetection(propReco);
 
@@ -53,11 +58,13 @@ public class AutonomousVisualDetection extends OpMode {
     @Override
     public void start() {
         telemetry.addLine("Starting...");
+        //Closing the vision portal
         visionPortal.close();
         visionPortal = null;
 
         initAprilTag();
 
+        //Setting the manualExposure
         try {
             setManualExposure(6, 250);
         }catch (InterruptedException e){
@@ -72,17 +79,24 @@ public class AutonomousVisualDetection extends OpMode {
         targetFound = false;
         desiredTag = null;
 
+        //Setting up a list with all the aprilTags that have been detecting
         List<AprilTagDetection> currentDetection = aprilTag.getDetections();
+        //Running through all the tags that are in the list
         for (AprilTagDetection detection: currentDetection){
+            //Checks if the aprlilTag has metadata
             if(detection.metadata != null){
+                //Checks if it has found the wanted tag
                 if((desiredTagID < 0) || (detection.id == desiredTagID)){
+                    //Setting up the variables to the desired tag
                     targetFound = true;
                     desiredTag = detection;
                     telemetry.addLine("Desired tag found.");
                 }else {
+                    //Sends meessage to telemetry that the tag found is not the wanted one 
                     telemetry.addData("Skipping", "Tag ID %d is not found", detection.id);
                 }
             }else {
+                //Send meessage to telemetry that the tag's list is not found
                 telemetry.addData("Unknown", "Tag ID %d not in TagLibrary", detection.id);
             }
         }
