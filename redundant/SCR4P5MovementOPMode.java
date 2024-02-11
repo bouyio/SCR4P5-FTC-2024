@@ -66,12 +66,12 @@ public class SCR4P5MovementOPMode extends OpMode {
         telemetry.addData("motor R", right_motor.getPower());
         telemetry.addData("motor L", left_motor.getPower());
         
-        //Checks if is turbo is true
+        //Checks whether to accelerarate or to run motors at full speed
         if(!turboMode){
             accelerate();
 
         }else {
-            //if turbo = false set the power of the motors directly 
+            
             right_motor.setPower(-LStickY + RStickX);
             left_motor.setPower(-LStickY - RStickX);
 
