@@ -97,9 +97,13 @@ public class FinestMovementAutonomousOmni extends OpMode {
         visionPortal = VisionPortal.easyCreateWithDefaults(webcamName, propReco);
 
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -166,11 +170,9 @@ public class FinestMovementAutonomousOmni extends OpMode {
             leftFrontDrive.setPower(0.5);
             rightBackDrive.setPower(0.5);
             rightFrontDrive.setPower(0.5);
-            try {
-                sleep(500);
-            }catch (InterruptedException e){
-                e.printStackTrace();
-            }
+
+            opModeSleep(500);
+
             leftBackDrive.setPower(0);
             leftFrontDrive.setPower(0);
             rightBackDrive.setPower(0);
@@ -178,7 +180,6 @@ public class FinestMovementAutonomousOmni extends OpMode {
 
 
         }
-
 
         // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
         double  rangeError      = (desiredTag.ftcPose.range - DISIEREDDISTANCE);
@@ -196,11 +197,8 @@ public class FinestMovementAutonomousOmni extends OpMode {
 
         // Apply desired axes motions to the drivetrain.
         moveRobot(drive, strafe, turn);
-        try {
-            sleep(10);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
+        opModeSleep(10);
     }
 
     private void moveRobot(double x, double y, double yaw){
@@ -242,6 +240,41 @@ public class FinestMovementAutonomousOmni extends OpMode {
             throw new RuntimeException(e);
         }
 
+        if(propReco.getSelection() == PropReco.Selected.LEFT){
+            rightBackDrive.setPower(0.7);
+            leftFrontDrive.setPower(0.7);
+
+            opModeSleep(700);
+
+            rightBackDrive.setPower(0);
+            leftFrontDrive.setPower(0);
+        } else if(propReco.getSelection() == PropReco.Selected.RIGHT){
+
+            leftBackDrive.setPower(0.7);
+            rightFrontDrive.setPower(0.7);
+
+            opModeSleep(700);
+
+            leftBackDrive.setPower(0);
+            rightFrontDrive.setPower(0);
+        } else {
+            leftBackDrive.setPower(0.7);
+            rightBackDrive.setPower(0.7);
+
+            opModeSleep(700);
+
+            leftBackDrive.setPower(0);
+            rightBackDrive.setPower(0);
+        }
+
+        leftBackDrive.setPower(-0.7);
+        rightBackDrive.setPower(-0.7);
+
+        opModeSleep(300);
+
+        leftBackDrive.setPower(0);
+        rightBackDrive.setPower(0);
+
         YawPitchRollAngles robotOrientation;
         robotOrientation = gyroscope.getRobotYawPitchRollAngles();
 
@@ -263,11 +296,7 @@ public class FinestMovementAutonomousOmni extends OpMode {
         leftBackDrive.setPower(-1.00);
         rightBackDrive.setPower(-1.00);
 
-        try {
-            sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        opModeSleep(500);
 
         leftBackDrive.setPower(0.00);
         rightBackDrive.setPower(0.00);
@@ -293,11 +322,7 @@ public class FinestMovementAutonomousOmni extends OpMode {
         leftBackDrive.setPower(-1.00);
         rightBackDrive.setPower(-1.00);
 
-        try {
-            sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        opModeSleep(500);
 
         leftBackDrive.setPower(0.00);
         rightBackDrive.setPower(0.00);
@@ -379,5 +404,11 @@ public class FinestMovementAutonomousOmni extends OpMode {
         }
     }
 
-
+    private void opModeSleep(long millis) {
+        try {
+            sleep(millis);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
