@@ -17,17 +17,18 @@ public class PropReco implements VisionProcessor {
     public static PropReco.AllianceColor alliance = AllianceColor.NONE;
     PropReco.Selected selection = PropReco.Selected.NONE;
 
-    // this line is for the processing of the frame 
-    
+    // This line is for the processing of the frame.
+    
+
     Mat submat = new Mat();
 
-    // these 3 lines are for the division webcam(video feed) input in 3 seperate parts
+    // These 3 lines are for the division webcam(video feed) input in 3 seperate parts.
     
     int width = frame.width();
     int height = frame.height();
     int sectionWidth = width / 3;
 
-    // the following lines are for the inistialisation of the rectangles
+    // The following lines are for the initiallization of the rectangles.
     
     public Rect rectLeft = new Rect(0, 0, sectionWidth, height);
     public Rect rectMiddle = new Rect(sectionWidth, 0, sectionWidth, height);
@@ -42,7 +43,7 @@ public class PropReco implements VisionProcessor {
     @Override
     public Object processFrame(Mat frame, long captureTimeNanos) {
 
-        // the following lines are for geting the averge RGB values of the RED and BLUE value value contained in the squeres
+        // The following lines are for geting the averge RGB values of the RED and BLUE value value contained in the rectangles.
         
         double averageRedLeft = getAvgRed(frame, rectLeft);
         double averageBlueLeft = getAvgBlue(frame, rectLeft);
@@ -56,7 +57,7 @@ public class PropReco implements VisionProcessor {
         double averageRed = (averageRedLeft + averageRedRight + averageRedMiddle) / 3;
         double averageBlue = (averageBlueLeft + averageBlueRight + averageBlueMiddle) / 3;
 
-        // this statement determens what alliance is the robot placed in
+        // This statement determens what alliance is the robot placed in.
         
         if(averageRed > averageBlue){
             alliance = AllianceColor.RED;
@@ -64,7 +65,7 @@ public class PropReco implements VisionProcessor {
             alliance = AllianceColor.BLUE;
         }
 
-        // these statements are for determening the postition of the prop 
+        // These statements are for determining the postition of the prop.
         
         if (AllianceColor.RED == alliance){
             if((averageRedLeft > averageRedMiddle) && (averageRedLeft > averageRedRight)){
@@ -83,7 +84,7 @@ public class PropReco implements VisionProcessor {
         }
     }
 
-    // this fanction gets the average RED value of the subsection passed in
+    // This fauction gets the average RED value of the subsection passed in.
     
     protected double getAvgRed(Mat input, Rect rect) {
         submat = input.submat(rect);
@@ -91,7 +92,7 @@ public class PropReco implements VisionProcessor {
         return color.val[0];
     }
 
-    // this fanction gets the average BLUE value of the subsection passed in
+    // This function gets the average BLUE value of the subsection passed in.
     
     protected double getAvgBlue(Mat input, Rect rect) {
         submat = input.submat(rect);
@@ -99,7 +100,7 @@ public class PropReco implements VisionProcessor {
         return color.val[2];
     }
 
-    // this function is responsible for drawing the rectangles
+    // This function is responsible for drawing the rectangles.
     
     private android.graphics.Rect makeGraphicsRect(Rect rect, float scaleBmpPxToCanvasPx) {
         int left = Math.round(rect.x * scaleBmpPxToCanvasPx);
@@ -114,19 +115,19 @@ public class PropReco implements VisionProcessor {
 
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
         
-        // these lines handle the colour of the rectangles that the prop is in
+        // These lines handle the colour of the rectangles that the prop is in.
         
         Paint selectedPaint = new Paint();
         selectedPaint.setColor(Color.RED);
         selectedPaint.setStyle(Paint.Style.STROKE);
         selectedPaint.setStrokeWidth(scaleCanvasDensity * 4);
 
-        // these lines handle the colour of the rectangle that the prop is NOT in
+        // These lines handle the colour of the rectangle that the prop is NOT in.
         
         Paint nonSelectedPaint = new Paint(selectedPaint);
         nonSelectedPaint.setColor(Color.GREEN);
 
-        // these lines set the spaces for the rectangles
+        // These lines set the spaces for the rectangles.
         
         android.graphics.Rect drawRectangleLeft = makeGraphicsRect(rectLeft,
                 scaleBmpPxToCanvasPx);
@@ -134,7 +135,7 @@ public class PropReco implements VisionProcessor {
                 scaleBmpPxToCanvasPx);
         android.graphics.Rect drawRectangleRight = makeGraphicsRect(rectRight, scaleBmpPxToCanvasPx);
 
-        // these lines draw the rectangles
+        // These lines draw the rectangles.
 
         selection = (PropReco.Selected) userContext;
         switch (selection) {
