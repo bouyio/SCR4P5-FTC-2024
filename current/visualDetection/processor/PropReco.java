@@ -84,7 +84,7 @@ public class PropReco implements VisionProcessor {
         }
     }
 
-    // This fauction gets the average RED value of the subsection passed in.
+    // This function gets the average RED value of the subsection passed in.
     
     protected double getAvgRed(Mat input, Rect rect) {
         submat = input.submat(rect);
