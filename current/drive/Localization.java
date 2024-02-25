@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
-public class LockInMath extends OpMode {
+public class Localization extends OpMode {
     // Declaring OpMode members.
     DcMotor leftBackDrive;
     DcMotor rightBackDrive;
