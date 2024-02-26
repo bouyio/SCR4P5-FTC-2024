@@ -40,7 +40,7 @@ public class FinestMovementAutonomousOmni extends OpMode {
     final double TURNGAIN =  0.01  ;   //  Turn Control "Gain".  
 
     final double MAXAUTOSPEED = 0.7;   //  Clip the approach speed to this max value 
-    final double MAXAUTOSTRAFE = 0.7;   //  Clip the approach speed to this max value 
+    final double MAXAUTOS  TRAFE = 0.7;   //  Clip the approach speed to this max value
     final double MAXAUTOTURN = 0.3;   //  Clip the turn speed to this max value 
 
     // The componets required for the prop detection.
