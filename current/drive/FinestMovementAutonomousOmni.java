@@ -149,7 +149,7 @@ public class FinestMovementAutonomousOmni extends OpMode {
         // Add all the detections to a list.
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
 
-        // Tu
+        
         for (AprilTagDetection detection : currentDetections) {
             // Check if there is size info on this tag.
             if (detection.metadata != null) {
