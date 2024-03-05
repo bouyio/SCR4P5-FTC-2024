@@ -216,13 +216,13 @@ public class FinestMovementAutonomousOmni extends OpMode {
 
     // This function is resonsible for the movement of the robot.
     private void moveRobot(double x, double y, double yaw){
-        // Calculate wheel powers.
+        // Calculate motor powers.
         double leftFrontPower    =  x -y -yaw;
         double rightFrontPower   =  x +y +yaw;
         double leftBackPower     =  x +y -yaw;
         double rightBackPower    =  x -y +yaw;
 
-        // Normalize wheel powers to be less than max (1.0)
+        // Normalize motor powers to be less than max (1.0)
         double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
         max = Math.max(max, Math.abs(leftBackPower));
         max = Math.max(max, Math.abs(rightBackPower));
@@ -234,7 +234,7 @@ public class FinestMovementAutonomousOmni extends OpMode {
             rightBackPower /= max;
         }
 
-        // Send powers to the wheels.
+        // Send powers to the motors.
         leftFrontDrive.setPower(leftFrontPower);
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
