@@ -105,13 +105,13 @@ public class FinestMovementAutonomousOmni extends OpMode {
 
         // Intialization of the motors.
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         leftFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
